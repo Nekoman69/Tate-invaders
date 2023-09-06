@@ -1,10 +1,19 @@
 let playerX = 0;
 let playerY = 0;
+let img;
 
 let lasers = [];
 let myAliens = [];
 let invaderLives = 3; // spillerens mængde af liv bliver defineret her.
 let lastShotTime = 1; // tiden af det sidste skud der blev skudt
+
+function preload() {
+  img = loadImage('Tate.png');
+  img2 = loadImage('what color is your bugatti.png');
+  img3 = loadImage('background.png');
+  
+}
+
 
 function setup() {
   createCanvas(400, 400);
@@ -14,13 +23,15 @@ function setup() {
 
   for (let i = 0; i < 3; i++) {//her bliver aliens skubbet ned, samt mængden af aliens bliver defineret.
     for (let j = 0; j < 12; j++) {
-      myAliens.push(new Alien(20 + 30 * j, 50 + 40 * i));
+      myAliens.push(new Alien(20 + 30 * j, 50 + 50 * i));
     }
   }
 }
 
 function draw() {
   background(0);
+  image(img3, 0, 0, 400, 400)
+  
 
   // I denne kode bliver der tjekket for kollision mellem lasere og aliens.
   for (let i = lasers.length - 1; i >= 0; i--) {
@@ -48,10 +59,9 @@ function draw() {
     let laser = lasers[i];
 
     if (
-      laser.x + 5 > playerX - 15 &&
-      laser.x - 5 < playerX + 15 &&
-      laser.y + 10 > playerY - 15 &&
-      laser.y - 10 < playerY + 15
+      laser.x + 5 > playerX &&
+      laser.x - 5 < playerX + 50 &&
+      laser.y + 10 > playerY
     ) {
       if (laser.firedByAlien) {
         lasers.splice(i, 1);
@@ -84,7 +94,7 @@ function draw() {
   }
 
   // her bliver spilleren tegnet (invader)
-  ellipse(playerX, playerY, 30);
+  image(img2,playerX, playerY-20, 50,50);
 
   // her bliver spillerens skud sat ned til at den kun kan skydee en gang i sekundet
   if (keyIsDown(SHIFT) && millis() - lastShotTime > 1000) {
@@ -149,7 +159,7 @@ class Alien {
   }
 
   draw() {
-    this.x += this.dx;
+    this.x += this.dx;//i denne kode bliver pladsen for aliens kan spawne valgt, i stedet for at der spawnes en af gangen bliver de alle spawnet af koden som en individuel alien.
 
     if (this.x < 5) {
       this.dx = 1;
@@ -158,9 +168,9 @@ class Alien {
     if (this.x > width - 5) {
       this.dx = -1;
       this.y += 20;
-    }
+    } 
 
-    rect(this.x, this.y, 20, 20);
+    image(img, this.x, this.y, 25, 25);
   }
 
   handleShooting(playerX, playerY) {
